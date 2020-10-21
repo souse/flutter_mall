@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hello_world/common/home_page/floor.dart';
+import 'package:hello_world/common/home_page/hot_goods.dart';
 import 'package:hello_world/common/home_page/recommend.dart';
 import 'package:hello_world/common/home_page/swiper_diy.dart';
 import 'package:hello_world/common/home_page/top_navigator.dart';
@@ -26,13 +26,14 @@ class _HomePageState extends State<HomePage>
   }
 
   @override
+  // ignore: must_call_super
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('百姓生活+'),
       ),
       body: FutureBuilder(
-        future: getHomePageContent(),
+        future: request(url: 'HOME_PAGE_CONTENT'),
         builder: (_, snapshot) {
           if (snapshot.hasData) {
             var data = json.decode(snapshot.data.toString());
@@ -63,6 +64,7 @@ class _HomePageState extends State<HomePage>
                   Column(
                     children: _floors(data['data']),
                   ),
+                  HotGoods(),
                 ],
               ),
             );
