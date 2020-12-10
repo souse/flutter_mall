@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:hello_world/common/home_page/floor.dart';
 import 'package:hello_world/common/home_page/hot_goods.dart';
 import 'package:hello_world/common/home_page/recommend.dart';
@@ -19,10 +20,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   String homePageContent = '正在获取...';
+  List<Map> hotGoodsList = [];
+  int page = 1;
+  EasyRefreshController _controller;
 
   @override
   void initState() {
     super.initState();
+    _controller = EasyRefreshController();
   }
 
   @override
@@ -44,7 +49,8 @@ class _HomePageState extends State<HomePage>
             Map shopInfo = data['data']['shopInfo'];
             List<Map> recommend = (data['data']['recommend'] as List).cast();
 
-            return SingleChildScrollView(
+            return EasyRefresh(
+              controller: _controller,
               child: Column(
                 children: <Widget>[
                   SwiperDiy(
@@ -64,9 +70,22 @@ class _HomePageState extends State<HomePage>
                   Column(
                     children: _floors(data['data']),
                   ),
-                  HotGoods(),
+                  HotGoods(hotGoodsList: hotGoodsList),
                 ],
               ),
+              onLoad: () async {
+                await request(
+                    url: 'HOME_PAGE_BELOW_CONTENT',
+                    formData: {'page': page}).then((val) {
+                  val = json.decode(val.toString());
+                  List<Map> newList = (val['data'] as List).cast();
+                  setState(() {
+                    hotGoodsList.addAll(newList);
+                    page++;
+                  });
+                });
+                _controller.finishLoad(noMore: page >= 2);
+              },
             );
           } else {
             return Center(

@@ -1,32 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hello_world/service/service_method.dart';
 
 class HotGoods extends StatefulWidget {
+  final List<Map> hotGoodsList;
+
+  HotGoods({Key key, @required this.hotGoodsList}) : super(key: key);
   @override
   _HotGoodsState createState() => _HotGoodsState();
 }
 
 class _HotGoodsState extends State<HotGoods> {
-  bool searched = false;
-  int page = 1;
-  List<Map> hotGoodsList = [];
-
   @override
   void initState() {
     super.initState();
-    request(url: 'HOME_PAGE_BELOW_CONTENT', formData: {'page': page})
-        .then((val) {
-      val = json.decode(val.toString());
-      List<Map> newList = (val['data'] as List).cast();
-      setState(() {
-        hotGoodsList.addAll(newList);
-        page++;
-        searched = true;
-      });
-    });
   }
 
   Widget _hotTitle = Container(
@@ -57,7 +43,7 @@ class _HotGoodsState extends State<HotGoods> {
     ),
   );
 
-  Widget _wrapList() {
+  Widget _wrapList(List<Map> hotGoodsList) {
     if (hotGoodsList.length != 0) {
       List<InkWell> listWidget = hotGoodsList.map((val) {
         return InkWell(
@@ -110,7 +96,7 @@ class _HotGoodsState extends State<HotGoods> {
         children: listWidget,
       );
     } else {
-      return searched ? Text('火爆专区数据为空') : Text('加载中...');
+      return Text('火爆专区数据为空');
     }
   }
 
@@ -120,7 +106,7 @@ class _HotGoodsState extends State<HotGoods> {
       child: Column(
         children: [
           _hotTitle,
-          _wrapList(),
+          _wrapList(widget.hotGoodsList),
         ],
       ),
     );

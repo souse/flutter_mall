@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -35,4 +33,11 @@ Future getHomePageBelowContent() async {
 
   if (response.statusCode == 200) return response;
   throw Exception('后台接口出现异常!');
+}
+
+Future getCategory() async {
+  Response<dynamic> response =
+      await Dio().get(SERVICE_PATH['CATEGORY_PAGE_GET_CATEGORY']);
+
+  return response;
 }
