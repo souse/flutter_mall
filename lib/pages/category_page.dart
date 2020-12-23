@@ -26,11 +26,23 @@ class _CategoryPageState extends State<CategoryPage> {
     request(url: 'CATEGORY_PAGE_GET_CATEGORY').then((val) {
       val = json.decode(val.toString());
 
-      CategoryListModel list = CategoryListModel.fromJson(val['data']);
-
-      list.data.forEach((item) {
-        print(item.mallCategoryName);
-      });
+      CategoryListModel list = CategoryListModel.fromJson(val);
     });
+  }
+}
+
+class LeftCategoryNav extends StatefulWidget {
+  LeftCategoryNav({Key key}) : super(key: key);
+
+  @override
+  _LeftCategoryNavState createState() => _LeftCategoryNavState();
+}
+
+class _LeftCategoryNavState extends State<LeftCategoryNav> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: null,
+    );
   }
 }
